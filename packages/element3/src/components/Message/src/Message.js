@@ -44,12 +44,13 @@ function mergeOptions(opts, type = 'info') {
   const defaultOptions = {
     duration: 4500,
     type,
-    verticalOffset: calculateVerticalOffset(opts.verticalOffset)
+    offset: calculateVerticalOffset(opts.offset)
   }
   delete opts?.verticalOffset
   const userOnClose = opts?.onClose
   // opts.onClose Cannot be merged into the default options
   delete opts?.onClose
+  delete opts?.offset
   defaultOptions.onClose = (instance) => {
     closeMessage(instance)
     if (userOnClose) userOnClose(instance.proxy)
@@ -80,10 +81,14 @@ function updatePosition(closeInstance) {
   const currentInstanceIndex = getIndexByInstance(closeInstance)
 
   if (currentInstanceIndex < 0) return
-  for (let index = currentInstanceIndex; index < instanceList.length; index++) {
-    const instance = instanceList[index]
 
-    instance.proxy.verticalOffsetVal -= getNextElementInterval(instance)
+  for (
+    let index = currentInstanceIndex + 1;
+    index < instanceList.length;
+    index++
+  ) {
+    const instance = instanceList[index]
+    instance.proxy.offsetVal -= getNextElementInterval(closeInstance)
   }
 }
 
