@@ -103,6 +103,7 @@ import Emitter from '../../../src/mixins/emitter'
 import { ElInput } from '../../../src/components/Input'
 import merge from '../../../src/utils/merge'
 import { createApp } from 'vue'
+import { useGlobalOptions } from '../../../src/use/globalConfig'
 const NewPopper = {
   props: {
     appendToBody: Popper.props.appendToBody,
@@ -580,7 +581,7 @@ export default {
     },
 
     pickerSize() {
-      return this.size || this._elFormItemSize || (this.$ELEMENT || {}).size
+      return this.size || this._elFormItemSize || useGlobalOptions().size
     },
 
     pickerDisabled() {
