@@ -23,7 +23,16 @@ describe('Picker.vue', () => {
     expect(wrapper.find('input').element.value).toBe('test')
   })
 
-  it('test pupover slot', () => {
+  it('test click ElInput show Popover', async () => {
+    const wrapper = mount(Picker)
+
+    await wrapper.findComponent({ name: 'ElInput' }).trigger('click')
+    expect(
+      wrapper.findComponent({ name: 'ElPopover' }).vm.showPopper
+    ).toBeTruthy()
+  })
+
+  it('test popover slot', () => {
     const wrapper = mount(Picker, {
       slots: {
         default: 'hello'
