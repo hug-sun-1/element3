@@ -1,5 +1,5 @@
 <template>
-  <div class="el-time-spinner" :class="{ 'has-seconds': showSeconds }">
+  <div class="el-time-spinner">
     <template v-if="!arrowControl">
       <el-scrollbar
         @mouseenter="emitSelectRange('hours')"
