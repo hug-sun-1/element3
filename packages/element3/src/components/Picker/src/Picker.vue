@@ -5,6 +5,7 @@
       <el-input
         :modelValue="modelValue"
         :prefixIcon="prefixIcon"
+        :clearable="true"
         @update:modelValue="$emit('update:modelValue', $event)"
       >
       </el-input>
