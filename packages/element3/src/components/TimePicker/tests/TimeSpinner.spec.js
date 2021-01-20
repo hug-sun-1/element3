@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import TimeSpinner from '../src/TimeSpinner.vue'
 
 describe('TimeSpinner.vue', () => {
@@ -12,7 +12,15 @@ describe('TimeSpinner.vue', () => {
    * 5、通过滚动调的箭头控制时间
    */
 
-  describe('vModel time', () => {
+  it('init', () => {
+    const wrapper = mount(TimeSpinner)
+    const ulElement = wrapper.findAll('ul')
+    expect(ulElement[0].findAll('li')).toHaveLength(24)
+    expect(ulElement[1].findAll('li')).toHaveLength(60)
+    expect(ulElement[2].findAll('li')).toHaveLength(60)
+  })
+
+  it('v-model', async () => {
     const wrapper = mount({
       components: { TimeSpinner },
       template: `
@@ -20,18 +28,44 @@ describe('TimeSpinner.vue', () => {
       `,
       setup() {
         return {
-          time: ref('11:22:33')
+          time: ref(new Date(2016, 9, 10, 18, 40))
         }
       }
     })
-
-    const activeEl = wrapper.findAll('el-time-spinner__item active')
-    expect(activeEl[0].text()).toEqual('11')
-    expect(activeEl[1].text()).toEqual('22')
-    expect(activeEl[2].text()).toEqual('33')
-
+    const activeEl = wrapper.findAll('[class *= "active"]')
+    expect(activeEl[0].text()).toEqual('18')
+    expect(activeEl[1].text()).toEqual('40')
+    expect(activeEl[2].text()).toEqual('00')
     const timeSpinner = wrapper.findComponent({ name: 'ElTimeSpinner' })
-    timeSpinner.vm.$emit('update:modelValue', '22:33:00')
-    expect(wrapper.vm.time).toEqual('22:33:00')
+    timeSpinner.vm.$emit('update:modelValue', new Date(2016, 9, 10, 19, 49))
+    await nextTick()
+    const activeNewEl = wrapper.findAll('[class *= "active"]')
+    expect(activeNewEl[0].text()).toEqual('19')
+    expect(activeNewEl[1].text()).toEqual('49')
+    expect(activeNewEl[2].text()).toEqual('00')
+  })
+
+  it('hidden seconds', () => {
+    const wrapper = mount(TimeSpinner, {
+      props: {
+        showSeconds: false,
+        modelValue: ref(new Date(2016, 9, 10, 18, 40))
+      }
+    })
+
+    const ElScrollbar = wrapper.findAll(
+      '[class="el-scrollbar el-time-spinner__wrapper"]'
+    )
+    expect(ElScrollbar[2].isVisible()).toBe(false)
+  })
+
+  it('use arrow control', () => {
+    const wrapper = mount(TimeSpinner, {
+      props: {
+        arrowControl: true,
+        modelValue: ref(new Date(2016, 9, 10, 18, 40))
+      }
+    })
+    expect(wrapper.find('i').exists()).toBe(true)
   })
 })
