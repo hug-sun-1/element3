@@ -8,6 +8,11 @@ export const IMAGE_SUCCESS =
 export const IMAGE_FAIL = 'data:image/png;base64,fail'
 
 describe('Avatar.props', () => {
+  it('snapshot', () => {
+    const wrapper = mount(Avatar)
+    expect(wrapper.element).toMatchSnapshot()
+  })
+
   describe('icon', () => {
     it('should render props.icon', () => {
       const wrapper = mount(Avatar, {
@@ -16,7 +21,7 @@ describe('Avatar.props', () => {
         }
       })
 
-      expect(wrapper.find('i').classes()).toContain('el-icon-eleme')
+      expect(wrapper.get('i')).toHaveClass('el-icon-eleme')
     })
   })
 
@@ -28,9 +33,11 @@ describe('Avatar.props', () => {
         }
       })
 
-      expect(wrapper.find('span').element.style.width).toBe('100px')
-      expect(wrapper.find('span').element.style.height).toBe('100px')
-      expect(wrapper.find('span').element.style.lineHeight).toBe('100px')
+      expect(wrapper.get('span')).toHaveStyle({
+        width: '100px',
+        height: '100px',
+        lineHeight: '100px'
+      })
     })
 
     it('size is string', () => {
@@ -39,7 +46,7 @@ describe('Avatar.props', () => {
           size: 'large'
         }
       })
-      expect(wrapper.find('.el-avatar--large').exists()).toBe(true)
+      expect(wrapper.find('.el-avatar--large')).toBeExist()
     })
   })
   describe('shape', () => {
@@ -49,7 +56,7 @@ describe('Avatar.props', () => {
           shape: 'circle'
         }
       })
-      expect(wrapper.find('.el-avatar--circle').exists()).toBe(true)
+      expect(wrapper.find('.el-avatar--circle')).toBeExist()
     })
   })
 
@@ -60,7 +67,7 @@ describe('Avatar.props', () => {
           src: IMAGE_SUCCESS
         }
       })
-      expect(wrapper.find('img').attributes('src')).toEqual(IMAGE_SUCCESS)
+      expect(wrapper.get('img')).toHaveAttribute('src', IMAGE_SUCCESS)
     })
   })
   describe('altSet', () => {
@@ -72,7 +79,9 @@ describe('Avatar.props', () => {
           srcSet: 'big.jpg 1440w,middle.jpg 800w'
         }
       })
-      expect(wrapper.find('img').attributes('srcset')).toEqual(
+
+      expect(wrapper.get('img')).toHaveAttribute(
+        'srcset',
         'big.jpg 1440w,middle.jpg 800w'
       )
     })
@@ -85,7 +94,7 @@ describe('Avatar.props', () => {
           alt: 'girl'
         }
       })
-      expect(wrapper.find('img').attributes('alt')).toEqual('girl')
+      expect(wrapper.get('img')).toHaveAttribute('alt', 'girl')
     })
   })
 
@@ -97,19 +106,16 @@ describe('Avatar.props', () => {
           fit: 'contain'
         }
       })
-      expect(wrapper.find('img').attributes('style')).toContain(
-        `object-fit: contain`
-      )
+
+      expect(wrapper.get('img')).toHaveStyle({
+        objectFit: 'contain'
+      })
     })
   })
 
   describe('error', () => {
     it('image load faild should call customer callback', async () => {
-      let called = false
-      const callback = () => {
-        called = true
-        return false
-      }
+      const callback = jest.fn(() => false)
       const wrapper = await mount(Avatar, {
         props: {
           src: IMAGE_SUCCESS,
@@ -119,16 +125,12 @@ describe('Avatar.props', () => {
 
       wrapper.find('img').trigger('error')
       await nextTick()
-      expect(wrapper.find('img').exists()).toBe(true)
-      expect(called).toBe(true)
+      expect(wrapper.find('img')).toBeExist()
+      expect(callback).toHaveBeenCalled()
     })
 
     it('image load faild should call customer callback and hidden image', async () => {
-      let called = false
-      const callback = () => {
-        called = true
-        return true
-      }
+      const callback = jest.fn(() => true)
       const wrapper = await mount(Avatar, {
         props: {
           src: IMAGE_SUCCESS,
@@ -138,8 +140,8 @@ describe('Avatar.props', () => {
 
       wrapper.find('img').trigger('error')
       await nextTick()
-      expect(wrapper.find('img').exists()).toBe(false)
-      expect(called).toBe(true)
+      expect(wrapper.find('img')).not.toBeExist()
+      expect(callback).toHaveBeenCalled()
     })
   })
   describe('solt', () => {
@@ -151,7 +153,9 @@ describe('Avatar.props', () => {
           }
         }
       })
-      expect(wrapper.find('span').text()).toEqual(`<span>default slot</span>`)
+      expect(wrapper.find('span')).toHaveTextContent(
+        `<span>default slot</span>`
+      )
     })
   })
 })

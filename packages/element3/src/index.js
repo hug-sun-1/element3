@@ -15,7 +15,7 @@ import { ElLink } from './components/Link'
 // Form
 import { ElRadio } from './components/Radio'
 import { ElRadioButton } from './components/RadioButton'
-import ElRadioGroup from '../packages/radio-group'
+import { ElRadioGroup } from './components/RadioGroup'
 import ElCheckbox from '../packages/checkbox'
 import ElCheckboxButton from '../packages/checkbox-button'
 import ElCheckboxGroup from '../packages/checkbox-group'
@@ -49,7 +49,7 @@ import { ElAvatar } from './components/Avatar'
 // Notice
 import ElAlert from '../packages/alert'
 
-import ElLoading, { useLoading } from '../packages/loading'
+import ElLoading from '../packages/loading'
 
 import { Message } from './components/Message'
 
@@ -285,7 +285,6 @@ export {
   ElAutocomplete,
   Message,
   Msgbox,
-  useLoading,
   Notification,
   install,
   setupGlobalOptions
