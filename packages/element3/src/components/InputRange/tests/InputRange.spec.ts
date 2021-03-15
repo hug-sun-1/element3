@@ -39,4 +39,65 @@ describe('InputRange.vue', () => {
     await fireEvent.focus(inputs[0])
     expect(inputs[0]).toHaveProperty('focus')
   })
+
+  it('should be readonly', () => {
+    const { getAllByRole } = render(InputRange, {
+      props: {
+        readonly: true
+      }
+    })
+    const inputs = getAllByRole('textbox')
+    expect(inputs[0]).toHaveAttribute('readonly')
+    expect(inputs[1]).toHaveAttribute('readonly')
+  })
+
+  it('should be disabled', () => {
+    const { getAllByRole } = render(InputRange, {
+      props: {
+        disabled: true
+      }
+    })
+    const inputs = getAllByRole('textbox')
+    expect(inputs[0]).toHaveAttribute('disabled')
+    expect(inputs[1]).toHaveAttribute('disabled')
+  })
+
+  it('should not be editable', () => {
+    const { getAllByRole } = render(InputRange, {
+      props: { editable: false }
+    })
+    const inputs = getAllByRole('textbox')
+    expect(inputs[0]).toHaveAttribute('readonly')
+    expect(inputs[1]).toHaveAttribute('readonly')
+  })
+
+  it('set InputRange size', async () => {
+    const { getByTestId, rerender } = render(InputRange, {
+      props: {
+        size: 'small'
+      }
+    })
+    expect(getByTestId('input-range')).toHaveClass('el-range-editor--small')
+
+    await rerender({
+      size: 'mini'
+    })
+
+    expect(getByTestId('input-range')).toHaveClass('el-range-editor--mini')
+  })
+
+  it('placeholders should be displayed', () => {
+    const startPlaceholder = '起始时间'
+    const endPlaceholder = '起始时间'
+    const { getAllByRole } = render(InputRange, {
+      props: {
+        startPlaceholder: startPlaceholder,
+        endPlaceholder: endPlaceholder
+      }
+    })
+    const inputs = getAllByRole('textbox') as HTMLInputElement[]
+
+    expect(inputs[0].placeholder).toBe(startPlaceholder)
+    expect(inputs[1].placeholder).toBe(endPlaceholder)
+  })
 })
