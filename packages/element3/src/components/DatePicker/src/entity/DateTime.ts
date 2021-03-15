@@ -1,4 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs'
+import isLeapYear from 'dayjs/plugin/isLeapYear'
 
 type DateTimeProp = {
   year: number
@@ -19,5 +20,10 @@ export class DateTime {
 
   getTimestamp(): number {
     return this._d.valueOf()
+  }
+
+  isLeapYear(): boolean {
+    dayjs.extend(isLeapYear)
+    return this._d.isLeapYear()
   }
 }
