@@ -22,6 +22,16 @@ describe('InputRange.vue', () => {
     expect(inputs[1]).toHaveValue('21:30:00')
   })
 
+  // it('should lose focus', () => {
+  //   const { getByTestId } = render(InputRange)
+
+  //   const irDiv = getByTestId('input-range')
+  //   // 获取焦点
+  //   // await fireEvent.focus(irDiv)
+  //   irDiv.focus()
+  //   expect(irDiv).toHaveFocus()
+  // })
+
   it('should get focus', async () => {
     const temp = {
       template: '<InputRange @focus="handleFocus"></InputRange>',
@@ -143,5 +153,16 @@ describe('InputRange.vue', () => {
       }
     })
     expect(getByTestId('clear-icon')).not.toHaveClass('clear-icon')
+  })
+
+  it('set range separator', () => {
+    const rangeSeparator = '至'
+    const { getByTestId } = render(InputRange, {
+      props: {
+        rangeSeparator
+      }
+    })
+    const span = getByTestId('range-separator')
+    expect(span).toHaveTextContent(rangeSeparator)
   })
 })

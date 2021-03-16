@@ -1,5 +1,4 @@
 <template>
-  <!-- @blur="handleBlur" -->
   <div
     class="el-date-editor el-range-editor el-input__inner"
     :class="classes"
@@ -20,6 +19,11 @@
       :placeholder="startPlaceholder"
       :text-align="align"
     />
+    <slot name="range-separator">
+      <span data-testid="range-separator" class="el-range-separator">{{
+        rangeSeparator
+      }}</span>
+    </slot>
     <input
       autocomplete="off"
       class="el-range-input"

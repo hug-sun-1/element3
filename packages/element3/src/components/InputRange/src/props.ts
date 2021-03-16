@@ -36,5 +36,9 @@ export const props = {
   clearable: {
     type: Boolean,
     default: true
+  },
+  rangeSeparator: {
+    type: String,
+    default: '-'
   }
 }
