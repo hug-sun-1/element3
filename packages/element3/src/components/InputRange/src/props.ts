@@ -29,5 +29,12 @@ export const props = {
   },
   prefixIcon: {
     type: String
+  },
+  clearIcon: {
+    type: String
+  },
+  clearable: {
+    type: Boolean,
+    default: true
   }
 }

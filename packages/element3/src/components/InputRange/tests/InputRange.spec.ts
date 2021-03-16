@@ -36,8 +36,9 @@ describe('InputRange.vue', () => {
     }
     const { getAllByRole } = render(temp)
     const inputs = getAllByRole('textbox')
-    await fireEvent.focus(inputs[0])
-    expect(inputs[0]).toHaveProperty('focus')
+    inputs[0].focus()
+    // await fireEvent.focus(inputs[0])
+    expect(inputs[0]).toHaveFocus()
   })
 
   it('should be readonly', () => {
@@ -121,6 +122,26 @@ describe('InputRange.vue', () => {
       }
     })
 
-    expect(getByTestId('input-range-icon')).toHaveClass('prefix-icon')
+    expect(getByTestId('prefix-icon')).toHaveClass(prefixIcon)
+  })
+
+  it('set clear-icon', () => {
+    const clearIcon = 'clear-icon'
+    const { getByTestId } = render(InputRange, {
+      props: {
+        clearIcon
+      }
+    })
+
+    expect(getByTestId('clear-icon')).toHaveClass(clearIcon)
+  })
+
+  it('the clear button should be hidden', () => {
+    const { getByTestId } = render(InputRange, {
+      props: {
+        clearable: false
+      }
+    })
+    expect(getByTestId('clear-icon')).not.toHaveClass('clear-icon')
   })
 })

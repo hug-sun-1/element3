@@ -6,7 +6,7 @@
     data-testid="input-range"
   >
     <i
-      data-testid="input-range-icon"
+      data-testid="prefix-icon"
       :class="['el-input__icon', 'el-range__icon', prefixIcon]"
     ></i>
     <input
@@ -31,6 +31,15 @@
       :placeholder="endPlaceholder"
       :text-align="align"
     />
+    <i
+      data-testid="clear-icon"
+      :class="[
+        'el-input__icon',
+        'el-range__close-icon',
+        clearable ? clearIcon : ''
+      ]"
+    >
+    </i>
   </div>
 </template>
 
