@@ -100,4 +100,16 @@ describe('InputRange.vue', () => {
     expect(inputs[0].placeholder).toBe(startPlaceholder)
     expect(inputs[1].placeholder).toBe(endPlaceholder)
   })
+
+  it('should be centered', () => {
+    const align = 'center'
+    const { getAllByRole } = render(InputRange, {
+      props: {
+        align
+      }
+    })
+    const inputs = getAllByRole('textbox') as HTMLInputElement[]
+    expect(inputs[0]).toHaveAttribute('text-align')
+    expect(inputs[1]).toHaveAttribute('text-align')
+  })
 })

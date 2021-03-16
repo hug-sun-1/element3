@@ -12,6 +12,7 @@
       :readonly="!editable || readonly"
       :disabled="disabled"
       :placeholder="startPlaceholder"
+      :text-align="align"
     />
     <input
       :value="modelValue && modelValue[1]"
@@ -20,6 +21,7 @@
       :readonly="!editable || readonly"
       :disabled="disabled"
       :placeholder="endPlaceholder"
+      :text-align="align"
     />
   </div>
 </template>
