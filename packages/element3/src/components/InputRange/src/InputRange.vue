@@ -5,7 +5,13 @@
     :class="classes"
     data-testid="input-range"
   >
+    <i
+      data-testid="input-range-icon"
+      :class="['el-input__icon', 'el-range__icon', prefixIcon]"
+    ></i>
     <input
+      autocomplete="off"
+      class="el-range-input"
       :value="modelValue && modelValue[0]"
       @input="handleStartInput"
       @focus="handleFocus"
@@ -15,6 +21,8 @@
       :text-align="align"
     />
     <input
+      autocomplete="off"
+      class="el-range-input"
       :value="modelValue && modelValue[1]"
       @input="handleEndInput"
       @focus="handleFocus"

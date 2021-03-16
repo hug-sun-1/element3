@@ -26,5 +26,8 @@ export const props = {
   align: {
     type: String as PropType<InputRangeAlign>,
     default: 'left'
+  },
+  prefixIcon: {
+    type: String
   }
 }

@@ -112,4 +112,15 @@ describe('InputRange.vue', () => {
     expect(inputs[0]).toHaveAttribute('text-align')
     expect(inputs[1]).toHaveAttribute('text-align')
   })
+
+  it('set prefix-icon', () => {
+    const prefixIcon = 'prefix-icon'
+    const { getByTestId } = render(InputRange, {
+      props: {
+        prefixIcon
+      }
+    })
+
+    expect(getByTestId('input-range-icon')).toHaveClass('prefix-icon')
+  })
 })
