@@ -1,5 +1,3 @@
-// 1. 基于`modelValue`进行数据双向绑定，实现两个文本框的输入
-// modelValue 是一个数组[start, end]
 import { render, fireEvent } from '@testing-library/vue'
 import InputRange from '../src/InputRange.vue'
 
@@ -22,17 +20,26 @@ describe('InputRange.vue', () => {
     expect(inputs[1]).toHaveValue('21:30:00')
   })
 
-  // it('should lose focus', () => {
-  //   const { getByTestId } = render(InputRange)
+  it('should lose focus', async () => {
+    const handleBlur = jest.fn()
+    const temp = {
+      template: '<InputRange @blur="handleBlur"></InputRange>',
+      components: {
+        InputRange
+      },
+      methods: {
+        handleBlur
+      }
+    }
+    const { getAllByRole } = render(temp)
+    const inputs = getAllByRole('textbox')
+    // inputs[0].blur()
+    await fireEvent.blur(inputs[0])
+    expect(handleBlur).toHaveBeenCalled()
+    expect(inputs[0]).not.toHaveFocus()
+  })
 
-  //   const irDiv = getByTestId('input-range')
-  //   // 获取焦点
-  //   // await fireEvent.focus(irDiv)
-  //   irDiv.focus()
-  //   expect(irDiv).toHaveFocus()
-  // })
-
-  it('should get focus', async () => {
+  it('should get focus', () => {
     const temp = {
       template: '<InputRange @focus="handleFocus"></InputRange>',
       components: {
@@ -47,7 +54,6 @@ describe('InputRange.vue', () => {
     const { getAllByRole } = render(temp)
     const inputs = getAllByRole('textbox')
     inputs[0].focus()
-    // await fireEvent.focus(inputs[0])
     expect(inputs[0]).toHaveFocus()
   })
 
@@ -165,4 +171,13 @@ describe('InputRange.vue', () => {
     const span = getByTestId('range-separator')
     expect(span).toHaveTextContent(rangeSeparator)
   })
+
+  // it('', () => {
+  //   const values = ['18:30:00', '20:30:00']
+  //   const { getAllByRole } = render(InputRange, {
+  //     props: {
+  //       modelValue: values
+  //     }
+  //   })
+  // })
 })

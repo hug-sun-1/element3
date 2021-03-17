@@ -14,6 +14,7 @@
       :value="modelValue && modelValue[0]"
       @input="handleStartInput"
       @focus="handleFocus"
+      @blur.capture="handleBlur"
       :readonly="!editable || readonly"
       :disabled="disabled"
       :placeholder="startPlaceholder"
@@ -30,6 +31,7 @@
       :value="modelValue && modelValue[1]"
       @input="handleEndInput"
       @focus="handleFocus"
+      @blur.capture="handleBlur"
       :readonly="!editable || readonly"
       :disabled="disabled"
       :placeholder="endPlaceholder"
@@ -53,7 +55,7 @@ import { toRefs, computed } from 'vue'
 export default {
   name: 'InputRange',
   props,
-  emits: ['update:modelValue', 'focus'],
+  emits: ['update:modelValue', 'focus', 'blur'],
   setup(props, { emit }) {
     const { modelValue, size } = toRefs(props)
 
@@ -65,16 +67,21 @@ export default {
       emit('update:modelValue', [modelValue[0], event.target.value])
     }
 
-    const handleFocus = function () {
-      emit('focus', this)
+    const handleFocus = function (event: any) {
+      emit('focus', event)
+    }
+
+    const handleBlur = function (event: any) {
+      emit('blur', event)
     }
     const classes = useClasses({ size })
-
-    // const handleBlur = function (event: any) {
-    //   emit('blur', event)
-    // }
-
-    return { handleStartInput, handleEndInput, handleFocus, classes }
+    return {
+      handleStartInput,
+      handleEndInput,
+      handleFocus,
+      handleBlur,
+      classes
+    }
   }
 }
 
