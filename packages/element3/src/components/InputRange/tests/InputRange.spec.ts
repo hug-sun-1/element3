@@ -1,6 +1,6 @@
-// 1. 基于`modelValue`进行数据双向绑定，实现两个文本框的输入
-// modelValue 是一个数组[start, end]
 import { render, fireEvent } from '@testing-library/vue'
+import { ref } from '@vue/reactivity'
+import { onMounted } from '@vue/runtime-core'
 import InputRange from '../src/InputRange.vue'
 
 describe('InputRange.vue', () => {
@@ -22,7 +22,26 @@ describe('InputRange.vue', () => {
     expect(inputs[1]).toHaveValue('21:30:00')
   })
 
-  it('should get focus', async () => {
+  it('should lose focus', async () => {
+    const handleBlur = jest.fn()
+    const temp = {
+      template: '<InputRange @blur="handleBlur"></InputRange>',
+      components: {
+        InputRange
+      },
+      methods: {
+        handleBlur
+      }
+    }
+    const { getAllByRole } = render(temp)
+    const inputs = getAllByRole('textbox')
+    // inputs[0].blur()
+    await fireEvent.blur(inputs[0])
+    expect(handleBlur).toHaveBeenCalled()
+    expect(inputs[0]).not.toHaveFocus()
+  })
+
+  it('should get focus', () => {
     const temp = {
       template: '<InputRange @focus="handleFocus"></InputRange>',
       components: {
@@ -36,8 +55,8 @@ describe('InputRange.vue', () => {
     }
     const { getAllByRole } = render(temp)
     const inputs = getAllByRole('textbox')
-    await fireEvent.focus(inputs[0])
-    expect(inputs[0]).toHaveProperty('focus')
+    inputs[0].focus()
+    expect(inputs[0]).toHaveFocus()
   })
 
   it('should be readonly', () => {
@@ -100,4 +119,80 @@ describe('InputRange.vue', () => {
     expect(inputs[0].placeholder).toBe(startPlaceholder)
     expect(inputs[1].placeholder).toBe(endPlaceholder)
   })
+
+  it('should be centered', () => {
+    const align = 'center'
+    const { getAllByRole } = render(InputRange, {
+      props: {
+        align
+      }
+    })
+    const inputs = getAllByRole('textbox') as HTMLInputElement[]
+    expect(inputs[0]).toHaveAttribute('text-align')
+    expect(inputs[1]).toHaveAttribute('text-align')
+  })
+
+  it('set prefix-icon', () => {
+    const prefixIcon = 'prefix-icon'
+    const { getByTestId } = render(InputRange, {
+      props: {
+        prefixIcon
+      }
+    })
+
+    expect(getByTestId('prefix-icon')).toHaveClass(prefixIcon)
+  })
+
+  it('set clear-icon', () => {
+    const clearIcon = 'clear-icon'
+    const { getByTestId } = render(InputRange, {
+      props: {
+        clearIcon
+      }
+    })
+
+    expect(getByTestId('clear-icon')).toHaveClass(clearIcon)
+  })
+
+  it('the clear button should be hidden', () => {
+    const { getByTestId } = render(InputRange, {
+      props: {
+        clearable: false
+      }
+    })
+    expect(getByTestId('clear-icon')).not.toHaveClass('clear-icon')
+  })
+
+  it('set range separator', () => {
+    const rangeSeparator = '至'
+    const { getByTestId } = render(InputRange, {
+      props: {
+        rangeSeparator
+      }
+    })
+    const span = getByTestId('range-separator')
+    expect(span).toHaveTextContent(rangeSeparator)
+  })
+
+  // it('manual focus', () => {
+  //   const comp = {
+  //     template: '<InputRange ref="refComp"></InputRange>',
+  //     components: {
+  //       InputRange
+  //     },
+  //     setup() {
+  //       const refComp = ref(null)
+  //       onMounted(() => {
+  //         refComp.value.manualFocus('start')
+  //       })
+  //       return {
+  //         refComp
+  //       }
+  //     }
+  //   }
+  //   const { getAllByRole } = render(comp)
+  //   const inputs = getAllByRole('textbox')
+  //   expect(inputs[0]).toHaveFocus()
+  //   expect(inputs[1]).not.toHaveFocus()
+  // })
 })

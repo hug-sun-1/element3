@@ -1,26 +1,53 @@
 <template>
-  <!-- @blur="handleBlur" -->
   <div
     class="el-date-editor el-range-editor el-input__inner"
     :class="classes"
     data-testid="input-range"
   >
+    <i
+      data-testid="prefix-icon"
+      :class="['el-input__icon', 'el-range__icon', prefixIcon]"
+    ></i>
     <input
+      ref="start"
+      autocomplete="off"
+      class="el-range-input"
       :value="modelValue && modelValue[0]"
       @input="handleStartInput"
       @focus="handleFocus"
+      @blur.capture="handleBlur"
       :readonly="!editable || readonly"
       :disabled="disabled"
       :placeholder="startPlaceholder"
+      :text-align="align"
     />
+    <slot name="range-separator">
+      <span data-testid="range-separator" class="el-range-separator">{{
+        rangeSeparator
+      }}</span>
+    </slot>
     <input
+      ref="end"
+      autocomplete="off"
+      class="el-range-input"
       :value="modelValue && modelValue[1]"
       @input="handleEndInput"
       @focus="handleFocus"
+      @blur.capture="handleBlur"
       :readonly="!editable || readonly"
       :disabled="disabled"
       :placeholder="endPlaceholder"
+      :text-align="align"
     />
+    <i
+      data-testid="clear-icon"
+      :class="[
+        'el-input__icon',
+        'el-range__close-icon',
+        clearable ? clearIcon : ''
+      ]"
+    >
+    </i>
   </div>
 </template>
 
@@ -30,8 +57,9 @@ import { toRefs, computed } from 'vue'
 export default {
   name: 'InputRange',
   props,
-  emits: ['update:modelValue', 'focus'],
-  setup(props, { emit }) {
+  emits: ['update:modelValue', 'focus', 'blur', 'manual-focus'],
+  on: [],
+  setup(props, { emit, expose }) {
     const { modelValue, size } = toRefs(props)
 
     const handleStartInput = function (event: any) {
@@ -42,16 +70,28 @@ export default {
       emit('update:modelValue', [modelValue[0], event.target.value])
     }
 
-    const handleFocus = function () {
-      emit('focus', this)
+    const handleFocus = function (event: any) {
+      emit('focus', event)
     }
+
+    const handleBlur = function (event: any) {
+      emit('blur', event)
+    }
+
+    function manualFocus(inputID: string) {
+      console.log(this.$refs)
+
+      this.$refs[inputID].focus()
+    }
+    expose({ manualFocus })
     const classes = useClasses({ size })
-
-    // const handleBlur = function (event: any) {
-    //   emit('blur', event)
-    // }
-
-    return { handleStartInput, handleEndInput, handleFocus, classes }
+    return {
+      handleStartInput,
+      handleEndInput,
+      handleFocus,
+      handleBlur,
+      classes
+    }
   }
 }
 
