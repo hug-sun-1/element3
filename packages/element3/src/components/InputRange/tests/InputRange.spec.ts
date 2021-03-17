@@ -1,4 +1,6 @@
 import { render, fireEvent } from '@testing-library/vue'
+import { ref } from '@vue/reactivity'
+import { onMounted } from '@vue/runtime-core'
 import InputRange from '../src/InputRange.vue'
 
 describe('InputRange.vue', () => {
@@ -172,12 +174,25 @@ describe('InputRange.vue', () => {
     expect(span).toHaveTextContent(rangeSeparator)
   })
 
-  // it('', () => {
-  //   const values = ['18:30:00', '20:30:00']
-  //   const { getAllByRole } = render(InputRange, {
-  //     props: {
-  //       modelValue: values
+  // it('manual focus', () => {
+  //   const comp = {
+  //     template: '<InputRange ref="refComp"></InputRange>',
+  //     components: {
+  //       InputRange
+  //     },
+  //     setup() {
+  //       const refComp = ref(null)
+  //       onMounted(() => {
+  //         refComp.value.manualFocus('start')
+  //       })
+  //       return {
+  //         refComp
+  //       }
   //     }
-  //   })
+  //   }
+  //   const { getAllByRole } = render(comp)
+  //   const inputs = getAllByRole('textbox')
+  //   expect(inputs[0]).toHaveFocus()
+  //   expect(inputs[1]).not.toHaveFocus()
   // })
 })

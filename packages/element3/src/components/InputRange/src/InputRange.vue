@@ -9,6 +9,7 @@
       :class="['el-input__icon', 'el-range__icon', prefixIcon]"
     ></i>
     <input
+      ref="start"
       autocomplete="off"
       class="el-range-input"
       :value="modelValue && modelValue[0]"
@@ -26,6 +27,7 @@
       }}</span>
     </slot>
     <input
+      ref="end"
       autocomplete="off"
       class="el-range-input"
       :value="modelValue && modelValue[1]"
@@ -55,8 +57,9 @@ import { toRefs, computed } from 'vue'
 export default {
   name: 'InputRange',
   props,
-  emits: ['update:modelValue', 'focus', 'blur'],
-  setup(props, { emit }) {
+  emits: ['update:modelValue', 'focus', 'blur', 'manual-focus'],
+  on: [],
+  setup(props, { emit, expose }) {
     const { modelValue, size } = toRefs(props)
 
     const handleStartInput = function (event: any) {
@@ -74,6 +77,13 @@ export default {
     const handleBlur = function (event: any) {
       emit('blur', event)
     }
+
+    function manualFocus(inputID: string) {
+      console.log(this.$refs)
+
+      this.$refs[inputID].focus()
+    }
+    expose({ manualFocus })
     const classes = useClasses({ size })
     return {
       handleStartInput,
