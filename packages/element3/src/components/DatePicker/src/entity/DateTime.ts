@@ -26,4 +26,12 @@ export class DateTime {
     dayjs.extend(isLeapYear)
     return this._d.isLeapYear()
   }
+
+  toDate(): Date {
+    return this._d.toDate()
+  }
+
+  format(template: string): string {
+    return this._d.format(template)
+  }
 }
