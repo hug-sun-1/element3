@@ -25,4 +25,10 @@ describe('DateTime.ts', () => {
     const dateTime = new DateTime('2021-12-11 22:33:00')
     expect(dateTime.format('YYYY-MM-DD HH:mm:ss')).toBe('2021-12-11 22:33:00')
   })
+
+  it('setTimeDate', () => {
+    const dateTime = new DateTime('2021-12-11 22:33:00', 'YYYY-MM-DD HH:mm:ss')
+    dateTime.setDateTime({ date: 23 })
+    expect(dateTime.format('DD')).toBe('23')
+  })
 })

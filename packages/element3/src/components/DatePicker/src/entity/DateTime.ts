@@ -1,14 +1,8 @@
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { Dayjs, UnitType } from 'dayjs'
 import isLeapYear from 'dayjs/plugin/isLeapYear'
 
 type DateTimeProp = {
-  year: number
-  month: number
-  day: number
-
-  hour: number
-  minute: number
-  second: number
+  [key in UnitType]?: number
 }
 
 export class DateTime {
@@ -33,5 +27,16 @@ export class DateTime {
 
   format(template: string): string {
     return this._d.format(template)
+  }
+
+  setDateTime(datetime: DateTimeProp): DateTime {
+    if (typeof datetime === 'object') {
+      for (const key in datetime) {
+        const value = datetime[key]
+        this._d = this._d.set(key as UnitType, value)
+      }
+    }
+
+    return this
   }
 }
