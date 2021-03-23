@@ -198,4 +198,25 @@ describe('InputRange.vue', () => {
 
     render(comp)
   })
+
+  it('manual select', async () => {
+    const refComp = ref(null)
+    const comp = {
+      template: `<InputRange ref="refComp" :modelValue="['1234567', '']"></InputRange>`,
+      components: {
+        InputRange
+      },
+      setup() {
+        return {
+          refComp
+        }
+      }
+    }
+    const { getAllByRole } = render(comp)
+
+    refComp.value.select('start', 1, 4)
+    const inputs = getAllByRole('textbox') as HTMLInputElement[]
+    expect(inputs[0].selectionStart).toBe(1)
+    expect(inputs[0].selectionEnd).toBe(5)
+  })
 })

@@ -63,6 +63,10 @@ export default {
     const { modelValue, size } = toRefs(props)
     const start = ref(null)
     const end = ref(null)
+    const inputElement = {
+      start,
+      end
+    }
 
     const handleStartInput = function (event: any) {
       emit('update:modelValue', [event.target.value, modelValue[1]])
@@ -81,12 +85,11 @@ export default {
     }
 
     function manualFocus(inputID: string) {
-      const inputs = {
-        start,
-        end
-      }
+      inputElement[inputID].value.focus()
+    }
 
-      inputs[inputID].value.focus()
+    function manualSelect(inputID: string, start: number, length: number) {
+      inputElement[inputID].value.setSelectionRange(start, start + length)
     }
 
     const classes = useClasses({ size })
@@ -100,7 +103,8 @@ export default {
       end,
 
       /** expose */
-      focus: manualFocus
+      focus: manualFocus,
+      select: manualSelect
     }
   }
 }
