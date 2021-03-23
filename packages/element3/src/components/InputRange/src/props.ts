@@ -3,7 +3,8 @@ import { InputRangeSize, InputRangeAlign } from './types'
 
 export const props = {
   modelValue: {
-    type: Array
+    type: Array as PropType<string[]>,
+    default: () => ['', '']
   },
   readonly: {
     type: Boolean
