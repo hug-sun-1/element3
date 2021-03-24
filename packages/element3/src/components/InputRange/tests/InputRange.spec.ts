@@ -1,6 +1,7 @@
 import { render, fireEvent } from '@testing-library/vue'
 import { ref } from '@vue/reactivity'
 import { onMounted } from '@vue/runtime-core'
+import { nextTick } from 'vue'
 import InputRange from '../src/InputRange.vue'
 
 describe('InputRange.vue', () => {
@@ -42,21 +43,20 @@ describe('InputRange.vue', () => {
   })
 
   it('should get focus', () => {
+    const fn = jest.fn()
     const temp = {
       template: '<InputRange @focus="handleFocus"></InputRange>',
       components: {
         InputRange
       },
       methods: {
-        handleFocus() {
-          console.log('trigger focus event')
-        }
+        handleFocus: fn
       }
     }
     const { getAllByRole } = render(temp)
     const inputs = getAllByRole('textbox')
     inputs[0].focus()
-    expect(inputs[0]).toHaveFocus()
+    expect(fn).toBeCalled()
   })
 
   it('should be readonly', () => {
@@ -174,25 +174,49 @@ describe('InputRange.vue', () => {
     expect(span).toHaveTextContent(rangeSeparator)
   })
 
-  // it('manual focus', () => {
-  //   const comp = {
-  //     template: '<InputRange ref="refComp"></InputRange>',
-  //     components: {
-  //       InputRange
-  //     },
-  //     setup() {
-  //       const refComp = ref(null)
-  //       onMounted(() => {
-  //         refComp.value.manualFocus('start')
-  //       })
-  //       return {
-  //         refComp
-  //       }
-  //     }
-  //   }
-  //   const { getAllByRole } = render(comp)
-  //   const inputs = getAllByRole('textbox')
-  //   expect(inputs[0]).toHaveFocus()
-  //   expect(inputs[1]).not.toHaveFocus()
-  // })
+  it('manual focus', async () => {
+    const fn = jest.fn()
+    const comp = {
+      template:
+        '<InputRange ref="refComp" @handleFocus="handleFocus"></InputRange>',
+      components: {
+        InputRange
+      },
+      setup() {
+        const refComp = ref(null)
+        onMounted(async () => {
+          refComp.value.focus('start')
+          await nextTick()
+          expect(fn).toBeCalled()
+        })
+        return {
+          refComp,
+          handleFocus: fn
+        }
+      }
+    }
+
+    render(comp)
+  })
+
+  it('manual select', async () => {
+    const refComp = ref(null)
+    const comp = {
+      template: `<InputRange ref="refComp" :modelValue="['1234567', '']"></InputRange>`,
+      components: {
+        InputRange
+      },
+      setup() {
+        return {
+          refComp
+        }
+      }
+    }
+    const { getAllByRole } = render(comp)
+
+    refComp.value.select('start', 1, 4)
+    const inputs = getAllByRole('textbox') as HTMLInputElement[]
+    expect(inputs[0].selectionStart).toBe(1)
+    expect(inputs[0].selectionEnd).toBe(5)
+  })
 })

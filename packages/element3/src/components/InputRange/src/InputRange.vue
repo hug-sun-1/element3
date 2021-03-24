@@ -12,7 +12,7 @@
       ref="start"
       autocomplete="off"
       class="el-range-input"
-      :value="modelValue && modelValue[0]"
+      :value="modelValue[0]"
       @input="handleStartInput"
       @focus="handleFocus"
       @blur.capture="handleBlur"
@@ -30,7 +30,7 @@
       ref="end"
       autocomplete="off"
       class="el-range-input"
-      :value="modelValue && modelValue[1]"
+      :value="modelValue[1]"
       @input="handleEndInput"
       @focus="handleFocus"
       @blur.capture="handleBlur"
@@ -53,14 +53,20 @@
 
 <script lang="ts">
 import { props } from './props'
-import { toRefs, computed } from 'vue'
+import { toRefs, computed, ref } from 'vue'
 export default {
   name: 'InputRange',
   props,
   emits: ['update:modelValue', 'focus', 'blur', 'manual-focus'],
-  on: [],
-  setup(props, { emit, expose }) {
+
+  setup(props, { emit }) {
     const { modelValue, size } = toRefs(props)
+    const start = ref(null)
+    const end = ref(null)
+    const inputElement = {
+      start,
+      end
+    }
 
     const handleStartInput = function (event: any) {
       emit('update:modelValue', [event.target.value, modelValue[1]])
@@ -79,18 +85,26 @@ export default {
     }
 
     function manualFocus(inputID: string) {
-      console.log(this.$refs)
-
-      this.$refs[inputID].focus()
+      inputElement[inputID].value.focus()
     }
-    expose({ manualFocus })
+
+    function manualSelect(inputID: string, start: number, length: number) {
+      inputElement[inputID].value.setSelectionRange(start, start + length)
+    }
+
     const classes = useClasses({ size })
     return {
       handleStartInput,
       handleEndInput,
       handleFocus,
       handleBlur,
-      classes
+      classes,
+      start,
+      end,
+
+      /** expose */
+      focus: manualFocus,
+      select: manualSelect
     }
   }
 }
